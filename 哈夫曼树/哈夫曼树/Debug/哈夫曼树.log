@@ -1,0 +1,41 @@
+﻿生成启动时间为 2017/5/13 13:18:39。
+     1>项目“F:\vsxeceit\哈夫曼树\哈夫曼树\哈夫曼树.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\VS15\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt huaffman.cpp
+         huaffman.cpp
+     1>f:\vsxeceit\哈夫曼树\哈夫曼树\heap111.hpp(29): warning C4018: “<”: 有符号/无符号不匹配
+         f:\vsxeceit\哈夫曼树\哈夫曼树\heap111.hpp(26): note: 编译类 模板 成员函数“Heap<int,Less<T>>::Heap(const T [],size_t)”时
+                 with
+                 [
+                     T=int
+                 ]
+         f:\vsxeceit\哈夫曼树\哈夫曼树\huaffman.cpp(74): note: 参见对正在编译的函数 模板 实例化“Heap<int,Less<T>>::Heap(const T [],size_t)”的引用
+                 with
+                 [
+                     T=int
+                 ]
+         f:\vsxeceit\哈夫曼树\哈夫曼树\huaffman.cpp(74): note: 参见对正在编译的类 模板 实例化“Heap<int,Less<T>>”的引用
+                 with
+                 [
+                     T=int
+                 ]
+     1>f:\vsxeceit\哈夫曼树\哈夫曼树\huaffman.cpp(40): warning C4018: “<”: 有符号/无符号不匹配
+         f:\vsxeceit\哈夫曼树\哈夫曼树\huaffman.cpp(37): note: 编译类 模板 成员函数“void HuffmanTree<int>::_CreateTree(const T [],size_t)”时
+                 with
+                 [
+                     T=int
+                 ]
+         f:\vsxeceit\哈夫曼树\哈夫曼树\huaffman.cpp(33): note: 参见对正在编译的函数 模板 实例化“void HuffmanTree<int>::_CreateTree(const T [],size_t)”的引用
+                 with
+                 [
+                     T=int
+                 ]
+         f:\vsxeceit\哈夫曼树\哈夫曼树\huaffman.cpp(73): note: 参见对正在编译的类 模板 实例化“HuffmanTree<int>”的引用
+       Link:
+         D:\VS15\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\vsxeceit\哈夫曼树\Debug\哈夫曼树.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"F:\vsxeceit\哈夫曼树\Debug\哈夫曼树.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\vsxeceit\哈夫曼树\Debug\哈夫曼树.lib" /MACHINE:X86 Debug\huaffman.obj
+         哈夫曼树.vcxproj -> F:\vsxeceit\哈夫曼树\Debug\哈夫曼树.exe
+     1>已完成生成项目“F:\vsxeceit\哈夫曼树\哈夫曼树\哈夫曼树.vcxproj”(Build 个目标)的操作。
+
+已成功生成。
+
+已用时间 00:00:00.97

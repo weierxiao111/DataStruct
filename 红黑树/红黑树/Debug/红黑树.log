@@ -1,0 +1,14 @@
+﻿生成启动时间为 2017-05-24 19:29:26。
+     1>项目“F:\vsxeceit\红黑树\红黑树\红黑树.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\VS15\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt rbtree.cpp
+         rbtree.cpp
+     1>f:\vsxeceit\红黑树\红黑树\rbtree.cpp(139): warning C4715: “RBTree<int,int>::Insert”: 不是所有的控件路径都返回值
+       Link:
+         D:\VS15\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\vsxeceit\红黑树\Debug\红黑树.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"F:\vsxeceit\红黑树\Debug\红黑树.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\vsxeceit\红黑树\Debug\红黑树.lib" /MACHINE:X86 Debug\rbtree.obj
+         红黑树.vcxproj -> F:\vsxeceit\红黑树\Debug\红黑树.exe
+     1>已完成生成项目“F:\vsxeceit\红黑树\红黑树\红黑树.vcxproj”(Build 个目标)的操作。
+
+已成功生成。
+
+已用时间 00:00:01.23
