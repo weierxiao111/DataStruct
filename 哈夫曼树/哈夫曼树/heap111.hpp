@@ -1,3 +1,5 @@
+#ifndef __HEAP_H_
+#define __HEAP_H_
 #include <iostream>
 using namespace std;
 #include <vector>
@@ -36,6 +38,10 @@ public:
 
 	}
 
+	T& Top()
+	{
+		return _heap[0];
+	}
 	const T& Top()const
 	{
 		return _heap[0];
@@ -140,3 +146,4 @@ public:
 protected:
 	Heap<T, Compare > _hp;
 };
+#endif
