@@ -12,7 +12,7 @@ struct symbol {
 	{}
 	char _character;
 	size_t _char_count;
-	char _huffcode[20];
+	string strcode;
 };
 
 struct filestate {
@@ -36,7 +36,10 @@ public:
 		}
 		Getchar(fin);
 		GetHuffmanCode();
-		
+		fclose(fin);
+		FILE *fout = fopen("pressfile.txt", "w");
+		WriteCode(fout);
+		fclose(fout);
 	}
 private:
 	void Getchar(FILE *fin)
@@ -73,15 +76,49 @@ private:
 				CodeArr[count++] = _cfile._symbol_arr[i]._character;
 		}
 		HuffmanTree<char> ht(CodeArr, count);
-		_GetCode( ht.GetRoot());
+		string StrCode;
+		_GetCode(ht.GetRoot(), StrCode);
+			
 	}
 
-	string  StrCode;
-	void _GetCode(Node<char> *proot, string & strCode)
+	void _GetCode(Node<char> *proot, string  &strCode)
 	{
 		if (NULL == proot)
 			return;
-		if 
+		if (NULL == proot->_pLeft && NULL == proot->_pRight)
+		{
+			_cfile._symbol_arr[proot->_weight].strcode = strCode;
+		}
+		_GetCode(proot->_pLeft, strCode + '0');
+		_GetCode(proot->_pRight, strCode + '1');
+	}
+
+	void WriteCode(FILE *fout)
+	{
+		int i = 0;
+		//char *writeBuff = new char[1024];
+		char c = 0;
+		int cnumber = 0;
+		for (int i = 0; i < 256; ++i)
+		{
+			if (_cfile._symbol_arr[i]._char_count > 0)
+			{
+				string code = _cfile._symbol_arr[i].strcode;
+				int len = code.length();
+				for (int j = 0; j < len; ++j)
+				{
+					c &= (code[j] - '0');
+					c << 1;
+					cnumber++; 
+					if (cnumber == 8)
+					{
+						fputc(c, fout);
+						cnumber = 0;
+					}
+				}
+			}
+		} 
+		c << (8 - cnumber);
 	}
 
 private:

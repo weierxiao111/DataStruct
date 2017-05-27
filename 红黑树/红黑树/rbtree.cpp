@@ -69,6 +69,7 @@ public:
 		}
 		pCur->_pparent = pParent;
 
+		//如果插入节点的父节点也是红色处理
 		while (pParent && pParent->_color == RED)
 		{
 			pgFather = pParent->_pparent;
@@ -173,7 +174,7 @@ public:
 		return _IsRBTree(_pRoot, numBlack, curBlack);
 	}
 private:
-	void _RotateL(Node *parent)
+	void _RotateL(Node *parent)  //左旋法
 	{
 		if (NULL == parent)
 			return;
@@ -200,7 +201,7 @@ private:
 		}
 	}
 
-	void _RotateR(Node *parent)
+	void _RotateR(Node *parent)   //右旋法
 	{
 		if (NULL == parent)
 			return;

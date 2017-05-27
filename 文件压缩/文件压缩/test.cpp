@@ -1,10 +1,13 @@
 #include <iostream>
 using namespace std;
-#include "HuffmanTree.hpp"
+#include "HuffmanZip.hpp"
 
 int main()
 {
-	int arr[] = { 1,3,5,7 };
-	HuffmanTree<int> ht(arr, 4);
+	//Huffmanzip zip("a.txt");
+	char i = 0;
+	FILE *fout = fopen( "pressfile", "w");
+	fputc(i, fout);
+	fclose(fout);
 	return 0;
 }
