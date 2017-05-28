@@ -36,9 +36,10 @@ public:
 		}
 		Getchar(fin);
 		GetHuffmanCode();
-		fclose(fin);
+		fseek(fin, 0, SEEK_SET);
 		FILE *fout = fopen("pressfile.txt", "w");
-		WriteCode(fout);
+		WriteCode(fin, fout);
+		fclose(fin);
 		fclose(fout);
 	}
 private:
@@ -93,34 +94,57 @@ private:
 		_GetCode(proot->_pRight, strCode + '1');
 	}
 
-	void WriteCode(FILE *fout)
+	void WriteCode(FILE* fin, FILE *fout)
 	{
-		int i = 0;
-		//char *writeBuff = new char[1024];
-		char c = 0;
-		int cnumber = 0;
-		for (int i = 0; i < 256; ++i)
+		char *writeBuff = new char[1024];
+		char *readBuff = new char[1024];
+		int writecount = 0;
+		int readsize = 0;
+		char code = 0;
+		int pos = 0;
+		while (true)
 		{
-			if (_cfile._symbol_arr[i]._char_count > 0)
+			readsize = fread(readBuff, 1, 1024, fin);
+			if (readsize)
 			{
-				string code = _cfile._symbol_arr[i].strcode;
-				int len = code.length();
-				for (int j = 0; j < len; ++j)
+				for (int i = 0; i < readsize; ++i)
 				{
-					c &= (code[j] - '0');
-					c << 1;
-					cnumber++; 
-					if (cnumber == 8)
+					char c = readBuff[i];
+					string Strcode = _cfile._symbol_arr[c].strcode;
+					for (int j = 0; j < Strcode.length(); ++j)
 					{
-						fputc(c, fout);
-						cnumber = 0;
+						if (Strcode[j] == '1')
+							code |= 1;
+						code <<= 1;
+						if (++pos == 8)
+						{
+							writeBuff[writecount++] = c;
+							code = 0;
+							pos = 0;
+							if (writecount == 1024)
+							{
+								fwrite(writeBuff, 1, 1024, fout);
+								writecount = 0;
+							}
+						}
 					}
 				}
 			}
-		} 
-		c << (8 - cnumber);
-	}
+			else
+				break;
+		}
 
+		if (pos)
+		{
+			code <<= (8 - pos);
+			writeBuff[writecount++] = code;
+		}
+		if (writecount)
+			fwrite(writeBuff, 1, writecount-1, fout);
+
+		delete []writeBuff;
+		delete []readBuff;
+	}
 private:
 	filestate _cfile;
 };

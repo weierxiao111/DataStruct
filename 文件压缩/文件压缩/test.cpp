@@ -4,10 +4,6 @@ using namespace std;
 
 int main()
 {
-	//Huffmanzip zip("a.txt");
-	char i = 0;
-	FILE *fout = fopen( "pressfile", "w");
-	fputc(i, fout);
-	fclose(fout);
+	Huffmanzip zip("a.txt");
 	return 0;
 }
