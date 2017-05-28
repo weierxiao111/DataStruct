@@ -21,22 +21,272 @@ struct RBTreeNode {
 };
 
 template <class K, class V>
+class RBTree_Iterator {
+	typedef RBTreeNode<K, V> Node;
+public:
+	typename typedef RBTree_Iterator<K, V> Iterator;
+public:
+	Iterator()
+		:_PNode(NULL)
+	{}
+
+	Iterator& operator++()
+	{
+		Increment(); 
+		return (*this);
+	}
+
+	Iterator operator++(int)
+	{
+		Iterator temp = (*this);
+		Increment();
+		return temp;
+	}
+
+	Iterator& operator--()
+	{
+		Decrement();
+		return (*this);
+	}
+
+	Iterator operator--(int)
+	{
+		Iterator temp = (*this);
+		DEcrement();
+		return temp;
+	}
+
+	protected:
+		void Increment()
+		{
+			if (_PNode->_pRight != NULL)
+			{
+				_PNode = _PNode->_pRight;
+				while (_PNode->_pLeft != NULL)
+					_PNode = _PNode->_pLeft;
+			}
+			else
+			{
+				Node *parent = _PNode->_pparent;
+				while (_PNode == parent->_pRight)
+				{
+					_PNode = parent;
+					parent = parent->_pparent;
+				}
+				if (_PNode->_pRight != parent)
+					_PNode = parent;
+			}
+		}
+
+
+		void Decrement()
+		{
+			if (_PNode->_color == RED &&
+				_PNode->_pparent->_pparent == _PNode )
+				_PNode = _PNode->_pRight;
+			else if (_PNode->_pLeft != NULL)
+			{
+				_PNode = _PNode->_pLeft;
+				while (_PNode->_pRight)
+					_PNode = _PNode->_pRight;
+			}
+			else
+			{
+				Node *parent = _PNode->_pparent;
+				while (_PNode == parent->_pLeft)
+				{
+					_PNode = parent;
+					parent = parent->_pparent;
+				}
+
+				_PNode = parent;
+			}
+		}
+private:
+	Node *_PNode;
+};
+
+template <class K, class V>
 class RBTree {
 	typedef RBTreeNode<K, V> Node;
 public:
 	RBTree()
-		:_pRoot(NULL)
-	{}
+	{
+		_pHead = new Node(K(), V());
+		_pHead->_pparent = NULL;
+		_pHead->_pLeft = _pHead;
+		_pHead->_pRight = _pHead;
+	}
 
 	bool Insert(const K& key, const V& value)
 	{
 		//如果根节点是null
+		Node *& _pRoot = _pHead->_pparent;
 		if (NULL == _pRoot)
 		{
 			_pRoot = new Node(key, value, BLACK);
+			_pRoot->_pparent = _pHead;
 			return true;
 		}
+		_pHead->_pLeft = _GetMin(_pRoot);
+		_pHead->_pRight = _GetMax(_pRoot);
+		return _Insert(_pRoot, key, value);
+	}
 
+	void InOrder()
+	{
+		Node* _pRoot = _pHead->_pparent;
+		if (_pRoot)
+		{
+			cout << "中序： ";
+			_InOrder(_pRoot);
+			cout << endl;
+		}
+	}
+
+	bool IsRBTree()
+	{
+		Node *_pRoot = _pHead->_pparent;
+		if (NULL == _pRoot)
+		{
+			cout << "树 为 空!" << endl;
+			return false;
+		}
+		if (_pRoot->_color == RED)
+		{
+			cout << "根节点为红色" << endl;
+			return  false;
+		}
+		size_t numBlack = 0;
+		size_t curBlack = 0;
+		Node *pCur = _pRoot;
+		while (pCur)
+		{
+			if (pCur->_color == BLACK)
+				numBlack++;
+			pCur = pCur->_pLeft;
+		}
+
+		return _IsRBTree(_pRoot, numBlack, curBlack);
+	}
+
+	Node *end()
+	{
+		return _pHead;
+	}
+
+	Node *begin()
+	{
+		
+		return 
+	}
+private:
+	Node *_GetMax(Node *proot)
+	{
+		if (NULL == proot)
+			return NULL;
+		else
+			while (proot->_pRight)
+			{
+				proot = proot->_pRight;
+			}
+		return proot;
+	}
+
+	Node *_GetMin(Node *proot)
+	{
+		if (NULL == proot)
+			return NULL;
+		else
+			while (proot->_pLeft)
+				proot = proot->_pLeft;
+		return proot;
+	}
+
+	void _RotateL(Node *parent)  //左旋法
+	{
+		if (NULL == parent)
+			return;
+		Node *SubR = parent->_pRight;
+		Node *SubRL = SubR->_pLeft;
+
+		parent->_pRight = SubRL;
+		if (SubRL)
+			SubRL->_pparent = parent;
+
+		Node *pPParent = parent->_pparent;
+		SubR->_pLeft = parent;
+		parent->_pparent = SubR;
+		
+		SubR->_pparent = pPParent;
+		if (_pHead == pPParent)
+			_pHead->_pparent = SubR;
+		else
+		{
+			if (parent = pPParent->_pLeft)
+				pPParent->_pLeft = SubR;
+			else
+				pPParent->_pRight = SubR;
+		}
+	}
+
+	void _RotateR(Node *parent)   //右旋法
+	{
+		if (NULL == parent)
+			return;
+
+		Node *SubL = parent->_pLeft;
+		Node *SubLR = SubL->_pRight;
+
+		parent->_pLeft = SubLR;
+		if (SubLR)
+			SubLR->_pparent = parent;
+
+		Node* pPParent = parent->_pparent;
+		SubL->_pRight = parent;
+		parent->_pparent = SubL;
+
+		SubL->_pparent = pPParent;
+		if (_pHead == pPParent)
+			_pHead->_pparent = SubL;
+		else
+		{
+			if (parent == pPParent->_pLeft)
+				pPParent->_pLeft = SubL;
+			else
+				pPParent->_pRight = SubL;
+		}
+	}
+
+	void _InOrder(Node *proot)
+	{
+		if (NULL == proot)
+			return;
+		_InOrder(proot->_pLeft);
+		cout << proot->_key << " ";
+		_InOrder(proot->_pRight);
+	}
+
+	bool _IsRBTree(Node *proot, const size_t numBlack, size_t curNum)
+	{
+			if (NULL == proot)
+				return (numBlack == curNum);
+			if (proot->_color == RED)
+			{
+				if (proot->_pparent && proot->_pparent->_color == RED)
+				{
+					cout << proot->_key << "有两个连续的红色" << endl;
+					return false;
+				}
+			}
+			else
+				curNum++;
+			return (_IsRBTree(proot->_pLeft, numBlack, curNum) &&
+				_IsRBTree(proot->_pRight, numBlack, curNum));		
+	}
+
+	bool _Insert(Node* &_pRoot, const K& key, const V& value)
+	{
 		Node *pCur = _pRoot;
 		Node *pParent = NULL;
 		Node *pUncle = NULL;
@@ -132,132 +382,15 @@ public:
 				}
 			}
 		}
-			// 插入节点的父节点是黑色，直接插入
+		// 插入节点的父节点是黑色，直接插入
 		if (pParent->_color == BLACK)
 		{
-				return true;
+			return true;
 		}
-	}
-
-	void InOrder()
-	{
-		if (_pRoot)
-		{
-			cout << "中序： ";
-			_InOrder(_pRoot);
-			cout << endl;
-		}
-	}
-
-	bool IsRBTree()
-	{
-		if (NULL == _pRoot)
-		{
-			cout << "树 为 空!" << endl;
-			return false;
-		}
-		if (_pRoot->_color == RED)
-		{
-			cout << "根节点为红色" << endl;
-			return  false;
-		}
-		size_t numBlack = 0;
-		size_t curBlack = 0;
-		Node *pCur = _pRoot;
-		while (pCur)
-		{
-			if (pCur->_color == BLACK)
-				numBlack++;
-			pCur = pCur->_pLeft;
-		}
-
-		return _IsRBTree(_pRoot, numBlack, curBlack);
-	}
-private:
-	void _RotateL(Node *parent)  //左旋法
-	{
-		if (NULL == parent)
-			return;
-		Node *SubR = parent->_pRight;
-		Node *SubRL = SubR->_pLeft;
-
-		parent->_pRight = SubRL;
-		if (SubRL)
-			SubRL->_pparent = parent;
-
-		Node *pPParent = parent->_pparent;
-		SubR->_pLeft = parent;
-		parent->_pparent = SubR;
-		
-		SubR->_pparent = pPParent;
-		if (NULL == pPParent)
-			_pRoot = SubR;
-		else
-		{
-			if (parent = pPParent->_pLeft)
-				pPParent->_pLeft = SubR;
-			else
-				pPParent->_pRight = SubR;
-		}
-	}
-
-	void _RotateR(Node *parent)   //右旋法
-	{
-		if (NULL == parent)
-			return;
-
-		Node *SubL = parent->_pLeft;
-		Node *SubLR = SubL->_pRight;
-
-		parent->_pLeft = SubLR;
-		if (SubLR)
-			SubLR->_pparent = parent;
-
-		Node* pPParent = parent->_pparent;
-		SubL->_pRight = parent;
-		parent->_pparent = SubL;
-
-		SubL->_pparent = pPParent;
-		if (NULL == pPParent)
-			_pRoot = SubL;
-		else
-		{
-			if (parent == pPParent->_pLeft)
-				pPParent->_pLeft = SubL;
-			else
-				pPParent->_pRight = SubL;
-		}
-	}
-
-	void _InOrder(Node *proot)
-	{
-		if (NULL == proot)
-			return;
-		_InOrder(proot->_pLeft);
-		cout << proot->_key << " ";
-		_InOrder(proot->_pRight);
-	}
-
-	bool _IsRBTree(Node *proot, const size_t numBlack, size_t curNum)
-	{
-			if (NULL == proot)
-				return (numBlack == curNum);
-			if (proot->_color == RED)
-			{
-				if (proot->_pparent && proot->_pparent->_color == RED)
-				{
-					cout << proot->_key << "有两个连续的红色" << endl;
-					return false;
-				}
-			}
-			else
-				curNum++;
-			return (_IsRBTree(proot->_pLeft, numBlack, curNum) &&
-				_IsRBTree(proot->_pRight, numBlack, curNum));		
 	}
 
 private:
-	Node* _pRoot;
+	Node* _pHead;
 };
 
 int main()
