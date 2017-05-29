@@ -26,9 +26,22 @@ class RBTree_Iterator {
 public:
 	typename typedef RBTree_Iterator<K, V> Iterator;
 public:
-	Iterator()
-		:_PNode(NULL)
+	Iterator( Node *node = nullptr)
+		:_PNode(node)
 	{}
+
+	Iterator(const Iterator& it)
+		:_PNode(it._PNode)
+	{}
+
+	Iterator& operator = (const Iterator& it)
+	{
+		if (this != &it)
+		{
+			_PNode = it._PNode;
+		}
+		return (*this);
+	}
 
 	Iterator& operator++()
 	{
@@ -52,11 +65,30 @@ public:
 	Iterator operator--(int)
 	{
 		Iterator temp = (*this);
-		DEcrement();
+		Decrement();
 		return temp;
 	}
 
-	protected:
+	bool operator!=(const Iterator& it)
+	{
+		return (_PNode != it._PNode);
+	}
+
+	bool operator==(const Iterator& it)
+	{
+		return (_PNode == it._PNode);
+	}
+
+	Node& operator *()const
+	{
+		return (*_PNode);
+	}
+
+	Node* operator ->()const
+	{
+		return &operator*();
+	}
+protected:
 		void Increment()
 		{
 			if (_PNode->_pRight != NULL)
@@ -109,6 +141,8 @@ private:
 template <class K, class V>
 class RBTree {
 	typedef RBTreeNode<K, V> Node;
+public:
+	typename typedef RBTree_Iterator<K, V> Iterator;
 public:
 	RBTree()
 	{
@@ -178,7 +212,7 @@ public:
 	Node *begin()
 	{
 		
-		return 
+		return _GetMin(_pHead->_pparent);
 	}
 private:
 	Node *_GetMax(Node *proot)
@@ -404,6 +438,16 @@ int main()
 	tree.InOrder();
 	if (tree.IsRBTree())
 		cout << "ÊÇºìºÚÊ÷" << endl;
+	RBTree_Iterator<int, int> it;
+	for (it = tree.begin(); it != tree.end(); ++it)
+		cout << (*it)._key << " ";
+	cout << endl;
+	it--;
+	for (; it != tree.begin(); it--)
+		cout << it->_key << " ";
+	cout << endl;
+
+
 	system("pause");
 	return 0;
 }
